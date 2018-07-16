@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.manassesalmeida.cursomc.domain.Atividade;
 import com.manassesalmeida.cursomc.domain.Grupo;
+import com.manassesalmeida.cursomc.domain.enums.Status;
 import com.manassesalmeida.cursomc.dto.GrupoDTO;
 import com.manassesalmeida.cursomc.repository.AtividadeRepository;
 import com.manassesalmeida.cursomc.repository.GrupoRepository;
@@ -38,9 +39,7 @@ public class GrupoService {
 	public Grupo insert(GrupoDTO obj) {
 		Grupo grupo = new Grupo();
 		grupo.setId(null);
-		grupo.setNome(obj.getNome());
-		grupo.setEditavel(true);
-		grupo.setHoraUltimaAlteracao(new Date(System.currentTimeMillis()));
+		updateData(grupo, obj);
 		return grupoRepository.save(grupo);
 	}
 	
@@ -51,23 +50,32 @@ public class GrupoService {
 			throw new IllegalArgumentException("Não é possível atualizar um grupo não-editável.");
 		}
 		
-		newObj.setEditavel(true);
 		updateData(newObj, obj);
 		return grupoRepository.save(newObj);
 	}
 	
 	public void delete(Integer id) {
+		Status statusDeletado = Status.toEnum(2);
 		Grupo obj = find(id);
+		obj.setStatus(statusDeletado);
 		
 		if(!obj.getEditavel()) {
 			throw new IllegalArgumentException("Grupo não pode ser excluído.");
 		}
-		grupoRepository.delete(obj);
+		grupoRepository.save(obj);
+		
+		List<Atividade> atividades = atividadeRepository.findAtividadeByGrupo(obj);
+		for (Atividade atividade : atividades) {
+			atividade.setStatus(statusDeletado);
+			atividadeRepository.save(atividade);
+		}
 	}
 	
 	private void updateData(Grupo newObj, GrupoDTO obj) {
 		newObj.setNome(obj.getNome());
+		newObj.setEditavel(true);
 		newObj.setHoraUltimaAlteracao(new Date(System.currentTimeMillis()));
+		newObj.setStatus(Status.toEnum(1));
 	}
 	
 	public void duplicate(Integer id, String type) {
@@ -82,12 +90,12 @@ public class GrupoService {
 			throw new IllegalArgumentException("Argumento de duplicação é inválido.");
 		}
 		
-		Grupo newObj = new Grupo(null, obj.getNome(), atividades, new Date(System.currentTimeMillis()), true);
+		Grupo newObj = new Grupo(null, obj.getNome(), atividades, new Date(System.currentTimeMillis()), true, obj.getStatus());
 		newObj = grupoRepository.save(newObj);
 		
 		List<Atividade> atividadesNew = new ArrayList<>();
 		for (Atividade atividade : atividades) {
-			atividadesNew.add(new Atividade(null, atividade.getDescricao(), atividade.getConteudo(), newObj));
+			atividadesNew.add(new Atividade(null, atividade.getDescricao(), atividade.getConteudo(), newObj, atividade.getStatus()));
 		}
 		
 		atividadeRepository.saveAll(atividadesNew);

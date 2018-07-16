@@ -3,6 +3,8 @@ package com.manassesalmeida.cursomc.domain;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.manassesalmeida.cursomc.domain.enums.Status;
 
 @Entity
 public class Atividade implements Serializable {
@@ -25,26 +28,29 @@ public class Atividade implements Serializable {
 
 	@NotNull(message = "Descrição é obrigatória.")
 	private String descricao;
-	
+
 	private String conteudo;
-	
+
 	@JsonIgnore
 	@ManyToOne
 	@NotNull(message = "Grupo da atividade deve ser informado.")
 	private Grupo grupo;
 
+	@Enumerated(value = EnumType.STRING)
+	@NotNull(message = "Status é obrigatório")
+	private Status status;
+
 	public Atividade() {
 	}
-	
-	public Atividade(Integer id, String descricao, String conteudo, Grupo grupo) {
+
+	public Atividade(Integer id, String descricao, String conteudo, Grupo grupo, Status status) {
 		super();
 		this.id = id;
 		this.descricao = descricao;
 		this.conteudo = conteudo;
 		this.grupo = grupo;
+		this.status = status;
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -78,6 +84,14 @@ public class Atividade implements Serializable {
 		this.grupo = grupo;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -102,5 +116,5 @@ public class Atividade implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 }

@@ -5,11 +5,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+
+import com.manassesalmeida.cursomc.domain.enums.Status;
 
 @Entity
 public class Grupo implements Serializable {
@@ -34,16 +38,22 @@ public class Grupo implements Serializable {
 	@NotNull(message = "Campo editável é obrigatório")
 	private Boolean editavel;
 
+	@Enumerated(value = EnumType.STRING)
+	@NotNull(message = "Status é obrigatório")
+	private Status status;
+
 	public Grupo() {
 	}
 
-	public Grupo(Integer id, String nome, List<Atividade> atividades, Date horaUltimaAlteracao, Boolean editavel) {
+	public Grupo(Integer id, String nome, List<Atividade> atividades, Date horaUltimaAlteracao, Boolean editavel,
+			Status status) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.atividades = atividades;
 		this.horaUltimaAlteracao = horaUltimaAlteracao;
 		this.editavel = editavel;
+		this.status = status;
 	}
 
 	public Integer getId() {
@@ -84,6 +94,14 @@ public class Grupo implements Serializable {
 
 	public void setEditavel(Boolean editavel) {
 		this.editavel = editavel;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override
