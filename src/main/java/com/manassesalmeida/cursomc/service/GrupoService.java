@@ -31,6 +31,7 @@ public class GrupoService {
 
 	@Autowired
 	private AtividadeService atividadeService;
+
 	public Grupo find(Integer id) {
 		try {
 			return grupoRepository.findById(id).get();

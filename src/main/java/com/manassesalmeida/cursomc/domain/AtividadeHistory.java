@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.manassesalmeida.cursomc.domain.enums.Status;
 
 @Entity
@@ -34,6 +35,7 @@ public class AtividadeHistory implements Serializable {
 
 	private String conteudo;
 
+	@JsonIgnore
 	@OneToOne
 	private Grupo grupo;
 

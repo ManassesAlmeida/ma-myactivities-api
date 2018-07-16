@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.manassesalmeida.cursomc.domain.enums.Status;
 
 @Entity
@@ -27,6 +28,7 @@ public class GrupoHistory implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@JsonIgnore
 	@NotNull(message = "Obrigatório informar o grupo.")
 	@ManyToOne
 	private Grupo grupo;
