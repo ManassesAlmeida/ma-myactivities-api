@@ -58,7 +58,7 @@ public class AtividadeResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@RequestMapping(value = "/duplicate/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/duplicate/{id}", method = RequestMethod.POST)
 	public ResponseEntity<Grupo> duplicate(@PathVariable Integer id){
 		atividadeService.duplicate(id);
 		return ResponseEntity.noContent().build();

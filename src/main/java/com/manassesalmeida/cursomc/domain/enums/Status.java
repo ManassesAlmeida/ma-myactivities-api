@@ -15,6 +15,9 @@ public enum Status {
 
 	public int getCod() {
 		return cod;
+	}
+
+	public String getDescricao() {
 		return descricao;
 	}
 
@@ -29,7 +32,7 @@ public enum Status {
 			}
 		}
 
-		throw new IllegalArgumentException("Status inválido: " + cod);
+		throw new IllegalArgumentException("Status informado inválido: " + cod);
 
 	}
 }

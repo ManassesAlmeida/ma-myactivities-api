@@ -57,7 +57,7 @@ public class GrupoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@RequestMapping(value = "/duplicate/{id}/{type}", method = RequestMethod.GET)
+	@RequestMapping(value = "/duplicate/{id}/{type}", method = RequestMethod.POST)
 	public ResponseEntity<Grupo> duplicate(@PathVariable Integer id, @PathVariable String type){
 		grupoService.duplicate(id, type);
 		return ResponseEntity.noContent().build();
