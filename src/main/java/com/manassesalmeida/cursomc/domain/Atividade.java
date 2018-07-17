@@ -1,7 +1,9 @@
 package com.manassesalmeida.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.manassesalmeida.cursomc.domain.enums.Status;
 
@@ -27,14 +30,19 @@ public class Atividade implements Serializable {
 	private Integer id;
 
 	@NotNull(message = "Descrição é obrigatória.")
+	@Column(columnDefinition = "LONGVARCHAR")
 	private String descricao;
 
+	@Column(columnDefinition = "LONGVARCHAR")
 	private String conteudo;
 
 	@JsonIgnore
 	@ManyToOne
 	@NotNull(message = "Grupo da atividade deve ser informado.")
 	private Grupo grupo;
+
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	private Date horaUltimaAlteracao;
 
 	@Enumerated(value = EnumType.STRING)
 	@NotNull(message = "Status é obrigatório")
@@ -43,12 +51,14 @@ public class Atividade implements Serializable {
 	public Atividade() {
 	}
 
-	public Atividade(Integer id, String descricao, String conteudo, Grupo grupo, Status status) {
+	public Atividade(Integer id, String descricao, String conteudo, Grupo grupo, Date horaUltimaAlteracao,
+			Status status) {
 		super();
 		this.id = id;
 		this.descricao = descricao;
 		this.conteudo = conteudo;
 		this.grupo = grupo;
+		this.horaUltimaAlteracao = horaUltimaAlteracao;
 		this.status = status;
 	}
 
@@ -82,6 +92,14 @@ public class Atividade implements Serializable {
 
 	public void setGrupo(Grupo grupo) {
 		this.grupo = grupo;
+	}
+
+	public Date getHoraUltimaAlteracao() {
+		return horaUltimaAlteracao;
+	}
+
+	public void setHoraUltimaAlteracao(Date horaUltimaAlteracao) {
+		this.horaUltimaAlteracao = horaUltimaAlteracao;
 	}
 
 	public Status getStatus() {

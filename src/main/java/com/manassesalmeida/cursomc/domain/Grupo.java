@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.manassesalmeida.cursomc.domain.enums.Status;
 
 @Entity
@@ -28,11 +30,13 @@ public class Grupo implements Serializable {
 	private Integer id;
 
 	@NotNull(message = "Nome do grupo é obrigatório")
+	@Column(columnDefinition = "LONGVARCHAR")
 	private String nome;
 
 	@OneToMany(mappedBy = "grupo")
 	private List<Atividade> atividades;
-
+	
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date horaUltimaAlteracao;
 
 	@NotNull(message = "Campo editável é obrigatório")

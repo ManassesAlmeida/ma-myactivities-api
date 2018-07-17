@@ -132,7 +132,7 @@ public class GrupoService {
 		List<Atividade> atividadesNew = new ArrayList<>();
 		for (Atividade atividade : atividades) {
 			atividadesNew.add(new Atividade(null, atividade.getDescricao(), atividade.getConteudo(), newObj,
-					atividade.getStatus()));
+					new Date(System.currentTimeMillis()), atividade.getStatus()));
 		}
 
 		atividadesNew = atividadeRepository.saveAll(atividadesNew);

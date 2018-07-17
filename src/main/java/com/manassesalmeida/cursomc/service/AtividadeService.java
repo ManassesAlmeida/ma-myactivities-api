@@ -1,5 +1,6 @@
 package com.manassesalmeida.cursomc.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -90,7 +91,8 @@ public class AtividadeService {
 			throw new IllegalArgumentException("Não é possível duplicar uma atividade deletada.");
 		}
 
-		Atividade newObj = new Atividade(null, obj.getDescricao(), obj.getConteudo(), obj.getGrupo(), obj.getStatus());
+		Atividade newObj = new Atividade(null, obj.getDescricao(), obj.getConteudo(), obj.getGrupo(),
+				new Date(System.currentTimeMillis()), obj.getStatus());
 		newObj = atividadeRepository.save(newObj);
 		insertHistory(newObj);
 	}
@@ -100,7 +102,7 @@ public class AtividadeService {
 				: atividadeHistoryRepository.findMaxVersao(obj) + 1;
 
 		AtividadeHistory atividadeHistory = new AtividadeHistory(null, obj, obj.getDescricao(), obj.getConteudo(),
-				obj.getGrupo(), obj.getStatus(), versao);
+				obj.getGrupo(), new Date(System.currentTimeMillis()), obj.getStatus(), versao);
 		atividadeHistoryRepository.save(atividadeHistory);
 	}
 }
