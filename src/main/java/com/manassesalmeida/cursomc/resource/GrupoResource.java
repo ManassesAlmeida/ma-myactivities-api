@@ -63,4 +63,10 @@ public class GrupoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@RequestMapping(value = "/restore/{id}", method = RequestMethod.POST)
+	public ResponseEntity<Grupo> restore(@PathVariable Integer id){
+		grupoService.restoreVersion(id);
+		return ResponseEntity.noContent().build();
+	}
+	
 }

@@ -26,6 +26,11 @@ public class AtividadeService {
 	@Autowired
 	private AtividadeHistoryRepository atividadeHistoryRepository;
 
+	@Autowired
+	private AtividadeHistoryService atividadeHistoryService;
+	
+
+	
 	public Atividade find(Integer id) {
 		try {
 			return atividadeRepository.findById(id).get();
@@ -81,6 +86,7 @@ public class AtividadeService {
 		newObj.setDescricao(obj.getDescricao());
 		newObj.setConteudo(obj.getConteudo());
 		newObj.setGrupo(grupoService.find(obj.getGrupo()));
+		newObj.setHoraUltimaAlteracao(new Date(System.currentTimeMillis()));
 		newObj.setStatus(Status.toEnum(1));
 	}
 
@@ -96,13 +102,30 @@ public class AtividadeService {
 		newObj = atividadeRepository.save(newObj);
 		insertHistory(newObj);
 	}
+	
+	public void restoreVersion(Integer id) {
+		AtividadeHistory atividadeHistory = atividadeHistoryService.find(id);
+		Atividade atividade = find(atividadeHistory.getAtividade().getId());
+		restoreVersionEditAtividade(atividadeHistory, atividade);
 
+		atividade = atividadeRepository.save(atividade);
+		insertHistory(atividade);
+	}
+	
+	private void restoreVersionEditAtividade(AtividadeHistory objOld, Atividade objNew) {
+		objNew.setStatus(objOld.getStatus());
+		objNew.setConteudo(objOld.getConteudo());
+		objNew.setDescricao(objOld.getDescricao());
+		objNew.setGrupo(objOld.getGrupo());
+		objNew.setHoraUltimaAlteracao(new Date(System.currentTimeMillis()));
+	}
+	
 	protected void insertHistory(Atividade obj) {
 		Integer versao = atividadeHistoryRepository.findMaxVersao(obj) == null ? 1
 				: atividadeHistoryRepository.findMaxVersao(obj) + 1;
 
 		AtividadeHistory atividadeHistory = new AtividadeHistory(null, obj, obj.getDescricao(), obj.getConteudo(),
-				obj.getGrupo(), new Date(System.currentTimeMillis()), obj.getStatus(), versao);
+				obj.getGrupo(), obj.getHoraUltimaAlteracao(), obj.getStatus(), versao);
 		atividadeHistoryRepository.save(atividadeHistory);
 	}
 }

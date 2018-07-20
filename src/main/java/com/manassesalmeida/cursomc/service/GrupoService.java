@@ -28,7 +28,10 @@ public class GrupoService {
 
 	@Autowired
 	private GrupoHistoryRepository grupoHistoryRepository;
-
+	
+	@Autowired
+	private GrupoHistoryService grupoHistoryService;
+	
 	@Autowired
 	private AtividadeService atividadeService;
 
@@ -140,6 +143,23 @@ public class GrupoService {
 		for (Atividade atividade : atividadesNew) {
 			atividadeService.insertHistory(atividade);
 		}
+	}
+	
+	public void restoreVersion(Integer id) {
+		GrupoHistory grupoHistory = grupoHistoryService.find(id);
+		Grupo grupo = find(grupoHistory.getGrupo().getId());
+		restoreVersionEditGrupo(grupoHistory, grupo);
+
+		grupo = grupoRepository.save(grupo);
+		insertHistory(grupo);
+
+	}
+
+	private void restoreVersionEditGrupo(GrupoHistory objOld, Grupo objNew) {
+		objNew.setNome(objOld.getNome());
+		objNew.setStatus(objOld.getStatus());
+		objNew.setEditavel(objOld.getEditavel());
+		objNew.setHoraUltimaAlteracao(new Date(System.currentTimeMillis()));
 	}
 
 	protected void insertHistory(Grupo obj) {

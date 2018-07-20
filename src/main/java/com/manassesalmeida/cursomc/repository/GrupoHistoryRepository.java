@@ -18,4 +18,5 @@ public interface GrupoHistoryRepository extends JpaRepository<GrupoHistory, Inte
 	
 	@Transactional(readOnly = true)
 	List<GrupoHistory> findByGrupo(Grupo grupo);
+	
 }
